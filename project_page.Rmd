@@ -1,0 +1,266 @@
+---
+title: "Reversing the Stroop Effect"
+author: "Piyali Misquitta"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+### Project Motivation  
+
+My aim with the project was to present psychological data with some flair. The Stroop Effect was the first lab experiment I ever did in my undergrad Psych course, and it blew my mind. Secondly, having worked with students, it has been my mission to spread the gospel of distributed practice. I hope this assessment will reach more young people (and adults*) and convince them of the wonders of regular learning sessions.
+
+*me
+
+### Data Origins  
+
+The data was sourced from ...
+
+### Psych 101
+
+#### What is the Stroop Effect?  
+
+Try saying the *colour* the words are written in (not the word):
+
+$\color{red}{\text{red}}$  
+
+$\color{blue}{\text{blue}}$  
+
+$\color{green}{\text{green}}$  
+
+$\color{purple}{\text{purple}}$     
+
+
+
+That was easy, right?  
+
+
+
+Now try that again: say the font colour, not the word:
+
+$\color{green}{\text{red}}$   
+
+$\color{red}{\text{blue}}$    
+
+$\color{purple}{\text{green}}$    
+
+$\color{blue}{\text{purple}}$   
+
+
+Was it harder this time? That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
+
+But what if there was a way to get better at the Stroop Task?
+
+That brings us to...   
+
+#### What is distributed practice?  
+
+Distributed practice involves short and frequent study sessions over a longer period of time, and it has been shown to improve recalling information [(Cepeda et al, 2006)](http://www.yorku.ca/ncepeda/publications/CPVWR2006.pdf).  
+
+This is why teachers don't like last-minute cram sessions! It doesn't work!    
+
+### Research Questions  
+
+Can spaced practice improve performance on the Stroop task?
+
+### Preparing the data
+
+```{r error=FALSE, message=FALSE}
+#setting the working directory
+setwd("C:/Users/piyal/OneDrive/Desktop/R/psy6422/datavizproject")
+
+#load the relevant libraries
+library(tidyverse)
+library(here)
+library(ggplot2)
+```
+
+````{r}
+#load the data
+source <- here("data", "cognitive_dynamics_heino.csv")
+stroop <- read.csv(source)
+```
+
+There are too many variables in the original dataset, so I would like choose the ones relevant for the visualisation.  
+
+And also change the names of the columns to make my coding life easier.  
+
+````{r}
+#the column names of the original dataset are too long
+
+#changing them to make them user/coder friendly
+stroop_clean <- stroop %>%
+  select(date, stroop_congruent_pre_meditation, stroop_incongruent_pre_meditation) %>%
+   rename(congruent = stroop_congruent_pre_meditation,
+         incongruent = stroop_incongruent_pre_meditation)
+
+#date is a character, needs to be made into date format
+stroop_clean <- stroop_clean %>% 
+  mutate(date = dmy(date)) %>%                 #changing string to date
+  filter(date > "2014-07-01", na.rm = TRUE)    #deleting outliers
+
+
+#changing centiseconds to milliseconds
+stroop_clean <- stroop_clean %>% 
+  mutate(congruent = congruent * 10,
+         incongruent = incongruent * 10)
+
+#reshaping dataframe to long
+stroop_long <- stroop_clean %>% select(date, congruent, incongruent) %>% 
+  gather(condition, time, congruent, incongruent)
+```
+
+Let's have a look at our final dataset!
+
+````{r}
+head(stroop_long)
+```
+
+That looks neat and concise and ready for the next step!
+
+### Visualising the data
+
+I am hoping to transport you, the reader, to the Stroop experiment with this visualisation. To do this, I have chosen the fonts and colours used by Stroop in his original experiment. 
+
+```{r error=FALSE, message=FALSE}
+#defining the theme
+theme_stroop <- function(){
+  font <- "franklin gothic medium" #assign font family
+
+  theme_minimal() %+replace%         #replacing the elements I want to change
+  
+  theme(
+    
+    #grid elements
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    
+    #text elements
+    plot.title = element_text(      #title
+      family = font,                #set font family     
+      size = 18,                    #set font size
+      face = 'bold',                #bold typeface
+      hjust = 0,                    #left align
+      vjust = 2),                   #raise slightly
+
+    plot.subtitle = element_text(   #subtitle
+      family = font,                #font family
+      size = 10),                   #font size
+    
+    axis.title = element_text(      #axis titles
+      family = font,                #font family
+      size = 8),                    #font size
+    
+    axis.text = element_text(       #axis text
+      family = font,                #font family
+      size = 8),                    #font size
+    
+    plot.caption = element_text(     #caption
+      family = font,                 #font family
+      size = 8,                      #font size
+      hjust = 1)                     #right align
+    )
+}
+
+#building a colour palette 
+#based on the colours used in Stroops original paper
+
+palette_stroop <- c("#ff0000", "#0085ff", "#3cff00", "#8c00db", "#543324")
+```
+
+
+And now, the moment we have been waiting for!
+
+
+```{r eval=TRUE, error=FALSE, message=FALSE}
+#plotting reaction time for congruent and incongruent trials
+p1 <- ggplot(data = stroop_long,
+             mapping = aes(x = date,
+                           y = time,
+                           colour = condition))
+
+plot1 <- p1 + geom_smooth(method = "lm", se = FALSE)+ 
+  geom_point(alpha = 0.5) +
+  labs(x = "Year",
+       y = "Reaction Time in ms",
+       title = "Distributed Practice Improves Performance on Stroop Task",
+       caption = "Source: 'Cognitive dynamics of a single subject'\n Matti Toivo Juhani Heino")+
+  theme_stroop() +
+  scale_colour_manual(values = palette_stroop) +
+  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")+
+  labs(colour = "Condition")
+
+plot1
+```
+
+Wait, what?! Doees deliberate practice actually *reverse the Stroop effect?!*  
+
+Let's take a closer look.
+
+```{r error=FALSE, message=FALSE}
+#creating a magnified inset showing crossover
+
+#coordinates of inset
+x0 <- as.Date("2016-01-01", "%Y-%m-%d")
+x1 <- as.Date("2016-10-01", "%Y-%m-%d")
+y0 <- 150
+y1 <- 200
+
+#coordinates of origin
+x3 <- as.Date("2016-05-01", "%Y-%m-%d")
+x4 <- as.Date("2016-06-30", "%Y-%m-%d")
+y3 <- 90
+y4 <- 100
+
+#the inset done manually
+p2 <- ggplot(data = stroop_long, aes(x = date,
+                                     y = time,
+                                     colour = condition)) +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_point(alpha = 0.5)+ 
+  xlim(x3, x4) +
+  #ylim(y3, y4)+
+  theme_stroop()+
+  scale_colour_manual(values = palette_stroop)+
+  theme(legend.position = "none")+
+  theme(#panel.border = element_rect(fill = NA),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title = element_blank())
+
+  
+plot1 + 
+  annotation_custom(ggplotGrob(p2), 
+                    xmin = x0,
+                    xmax = x1,
+                    ymin = y0,
+                    ymax = y1) +
+  
+  geom_rect(aes(xmin = x0,              #border of inset
+                xmax = x1,
+                ymin = y0,
+                ymax = y1),
+              colour = "black",
+              #linetype = "dashed",
+              alpha = 0) +
+  
+  geom_rect(aes(xmin = x3,              #border of section on graph
+                xmax = x4,
+                ymin = y3,
+                ymax = y4),
+            colour = "black",
+            #linetype = "dashed",
+            alpha = 0) 
+  
+```
+
+This graph shows the effect of daily practice on the Stroop Effect.   
+
+With enough practice you could end up reading this:
+
+faster than you read this:  
+
+Imagine what else you could become proficient in with distributed practice!
+
+### Further explorations
+
+The original dataset also has data on meditation, the time of day when the Stroop task was done. It would be interesting to see how those factors play a role in learning.
