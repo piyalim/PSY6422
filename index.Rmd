@@ -5,26 +5,29 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
-### Project Motivation  
+## Project Motivation  
 
 My aim with the project was to present psychological data with some flair. The Stroop Effect was the first lab experiment I ever did in my undergrad Psych course, and I've been fascinated. Secondly, having worked with students, it has been my mission to spread the gospel of distributed practice. I hope this assessment will reach more young people (and adults*) and convince them of the wonders of regular learning sessions.
 
 *me
 
-### Data Origins  
+## Data Origins  
 
 The data was sourced from ...
 
-### Psych 101
+## Psych 101
 
-#### What is the Stroop Effect?  
+### What is the Stroop Effect?  
 
 Try saying the *colour* the words are written in (not the word):
 
-$\color{red}{\text{red}}$  
-$\color{blue}{\text{blue}}$  
-$\color{green}{\text{green}}$  
-$\color{purple}{\text{purple}}$     
+**$\color{red}{\text{red}}$**  
+
+**$\color{blue}{\text{blue}}$**  
+
+**$\color{green}{\text{green}}$**  
+
+**$\color{purple}{\text{purple}}$**     
 
 
 
@@ -34,13 +37,13 @@ That was easy, right?
 
 Now try that again: say the font colour, not the word:
 
-$\color{green}{\text{red}}$   
+**$\color{green}{\text{red}}$**   
 
-$\color{red}{\text{blue}}$    
+**$\color{red}{\text{blue}}$**    
 
-$\color{purple}{\text{green}}$    
+**$\color{purple}{\text{green}}$**    
 
-$\color{blue}{\text{purple}}$   
+**$\color{blue}{\text{purple}}$**   
 
 
 Was it harder this time? That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
@@ -49,7 +52,7 @@ But what if there was a way to get better at the Stroop Task?
 
 That brings us to...   
 
-#### What is distributed practice?  
+### What is distributed practice?  
 
 Distributed practice involves short and frequent study sessions over a longer period of time, and it has been shown to improve recalling information [(Cepeda et al, 2006)](http://www.yorku.ca/ncepeda/publications/CPVWR2006.pdf).  
 
@@ -116,14 +119,12 @@ That looks neat and concise and ready for the next step!
 
 ### Visualising the data
 
-I am hoping to transport you, the reader, to the Stroop experiment with this visualisation. To do this, I have chosen the fonts and colours used by Stroop in his original experiment. 
+I am hoping to transport you, the reader, to the Stroop experiment with this visualisation. To do this, I have chosen the colours used by Stroop in his original experiment. 
 
 ```{r error=FALSE, message=FALSE}
 #defining the theme
 theme_stroop <- function(){
-  #font <- "franklin gothic medium" #assign font family
-
-  theme_minimal() %+replace%         #replacing the elements I want to change
+   theme_minimal() %+replace%         #replacing the elements I want to change
   
   theme(
     
@@ -133,30 +134,25 @@ theme_stroop <- function(){
     
     #text elements
     plot.title = element_text(      #title
-      #family = font,                #set font family     
-      size = 18,                    #set font size
+      size = 15,                    #set font size
       face = 'bold',                #bold typeface
       hjust = 0,                    #left align
       vjust = 2),                   #raise slightly
 
     plot.subtitle = element_text(   #subtitle
-      #family = font,                #font family
       size = 10),                   #font size
     
     axis.title = element_text(      #axis titles
-      #family = font,                #font family
       size = 8),                    #font size
     
     axis.text = element_text(       #axis text
-      #family = font,                #font family
       size = 8),                    #font size
     
     plot.caption = element_text(     #caption
-      #family = font,                 #font family
       size = 8,                      #font size
       hjust = 1),                    #right align
     
-    legend.position = c(.9,.75)  #positioning legend
+    legend.position = c(.9,.8)  #positioning legend
     )
 }
 
@@ -170,15 +166,15 @@ palette_stroop <- c("#ff0000", "#0085ff", "#3cff00", "#8c00db", "#543324")
 And now, the moment we have been waiting for!
 
 
-```{r eval=TRUE, error=FALSE, message=FALSE}
+```{r eval=TRUE, error=FALSE, message=FALSE, out.width="100%"}
 #plotting reaction time for congruent and incongruent trials
 p1 <- ggplot(data = stroop_long,
              mapping = aes(x = date,
                            y = time,
                            colour = condition))
 
-plot1 <- p1 + geom_smooth(method = "lm", se = FALSE)+ 
-  geom_point(alpha = 0.5) +
+plot1 <- p1 + geom_smooth(method = "lm", se = FALSE, na.rm = TRUE)+ 
+  geom_point(alpha = 0.5, na.rm = TRUE) +
   labs(x = "Year",
        y = "Reaction Time in ms",
        title = "Distributed Practice Improves Performance on Stroop Task",
@@ -191,18 +187,18 @@ plot1 <- p1 + geom_smooth(method = "lm", se = FALSE)+
 plot1
 ```
 
-Wait, what?! Doees deliberate practice actually *reverse the Stroop effect?!*  
+Wait, what?! Does deliberate practice actually **reverse the Stroop effect?!**  
 
 Let's take a closer look.
 
-```{r error=FALSE, message=FALSE}
+```{r error=FALSE, message=FALSE, out.width="100%"}
 #creating a magnified inset showing crossover
 
 #coordinates of inset
 x0 <- as.Date("2016-01-01", "%Y-%m-%d")
-x1 <- as.Date("2016-10-01", "%Y-%m-%d")
-y0 <- 150
-y1 <- 200
+x1 <- as.Date("2016-09-01", "%Y-%m-%d")
+y0 <- 140
+y1 <- 180
 
 #coordinates of origin
 x3 <- as.Date("2016-05-01", "%Y-%m-%d")
@@ -214,15 +210,14 @@ y4 <- 100
 p2 <- ggplot(data = stroop_long, aes(x = date,
                                      y = time,
                                      colour = condition)) +
-  geom_smooth(method = "lm", se = FALSE) +
-  geom_point(alpha = 0.5)+ 
+  geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +
+  geom_point(alpha = 0.5, na.rm = TRUE)+ 
   xlim(x3, x4) +
-  #ylim(y3, y4)+
+  ylim(y3, y4)+
   theme_stroop()+
   scale_colour_manual(values = palette_stroop)+
   theme(legend.position = "none")+
-  theme(#panel.border = element_rect(fill = NA),
-        axis.text.x = element_blank(),
+  theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.title = element_blank())
 
@@ -253,12 +248,12 @@ plot1 +
      annotate("segment", x = x3, xend = x0,   #connecting graph to inset
                          y = y4, yend = y0,   
              colour = "black",
-             size = .8,
+             linewidth = .8,
              linetype = 2) +
     annotate("segment", x = x4, xend = x1,    #connecting graph to inset
                         y = y4, yend = y0,
            colour = "black",
-           size = .8,
+           linewidth = .8,
            linetype = 2) 
   
 ```

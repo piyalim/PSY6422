@@ -212,3 +212,26 @@ geom_path(aes(x,y,group=grp),
 geom_path(data = df,
           aes(x,y,group = grp),
           na.rm = FALSE)
+
+
+trial_df <- stroop_long %>% filter(date < "2016-07-01", na.rm = TRUE)
+
+p_trial <- ggplot(data = trial_df,
+             mapping = aes(x = date,
+                           y = time,
+                           colour = condition))
+
+plot_trial <- p_trial + geom_smooth(method = "lm", se = FALSE)+ 
+  geom_point(alpha = 0.5) +
+  labs(x = "Year",
+       y = "Reaction Time in ms",
+       title = "Distributed Practice Improves Performance on Stroop Task",
+       caption = "Source: 'Cognitive dynamics of a single subject'\n Matti Toivo Juhani Heino")+
+  theme_stroop() +
+  scale_colour_manual(values = palette_stroop) +
+  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")+
+  labs(colour = "Condition")
+
+plot_trial
+
+
