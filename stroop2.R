@@ -50,7 +50,7 @@ stroop_long <- stroop_clean %>% select(date, congruent, incongruent) %>%
 #-------------------MAKE THE PLOTS-------------------
 #defining the theme
 theme_stroop <- function(){
-  font <- "franklin gothic medium" #assign font family
+  #font <- "franklin gothic medium" #assign font family
 
   theme_minimal() %+replace%         #replacing the elements I want to change
   
@@ -62,28 +62,30 @@ theme_stroop <- function(){
     
     #text elements
     plot.title = element_text(      #title
-      family = font,                #set font family     
+      #family = font,                #set font family     
       size = 18,                    #set font size
       face = 'bold',                #bold typeface
       hjust = 0,                    #left align
       vjust = 2),                   #raise slightly
 
     plot.subtitle = element_text(   #subtitle
-      family = font,                #font family
+      #family = font,                #font family
       size = 10),                   #font size
     
     axis.title = element_text(      #axis titles
-      family = font,                #font family
+      #family = font,                #font family
       size = 8),                    #font size
     
     axis.text = element_text(       #axis text
-      family = font,                #font family
+      #family = font,                #font family
       size = 8),                    #font size
     
     plot.caption = element_text(     #caption
-      family = font,                 #font family
+      #family = font,                 #font family
       size = 8,                      #font size
-      hjust = 1)                     #right align
+      hjust = 1),                    #right align
+    
+    legend.position = "right"  #positioning legend
     )
 }
 
@@ -177,20 +179,36 @@ plot1 +
                 ymin = y0,
                 ymax = y1),
               colour = "black",
-              #linetype = "dashed",
-              alpha = 0) +
+                size = 1,
+               alpha = 0) +
   
   geom_rect(aes(xmin = x3,              #border of section on graph
                 xmax = x4,
                 ymin = y3,
                 ymax = y4),
-            colour = "black",
-            #linetype = "dashed",
-            alpha = 0)
+              colour = "black",
+                size = 1,
+                alpha = 0) +
+  
+     annotate("segment", x = x3, xend = x0,   #connecting graph to inset
+                         y = y4, yend = y0,   
+             colour = "black",
+             size = .8,
+             linetype = 2) +
+    annotate("segment", x = x4, xend = x1,    #connecting graph to inset
+                        y = y4, yend = y0,
+           colour = "black",
+           size = .8,
+           linetype = 2) 
+  
+
+df <- data.frame(x = c(x3, x0, x4, x1), y = c(y4, y0, y4,y0), grp = c(1,1,2,2))
   
 #the path is not working  
 geom_path(aes(x,y,group=grp), 
                 data=data.frame(x = c(x3, x0, x4, x1), y=c(y3, y0, y4, y1),grp=c(1,1,2,2)),
                 linetype="dashed")
 
-
+geom_path(data = df,
+          aes(x,y,group = grp),
+          na.rm = FALSE)

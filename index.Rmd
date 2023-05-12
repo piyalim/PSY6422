@@ -7,7 +7,7 @@ output: html_document
 
 ### Project Motivation  
 
-My aim with the project was to present psychological data with some flair. The Stroop Effect was the first lab experiment I ever did in my undergrad Psych course, and it blew my mind. Secondly, having worked with students, it has been my mission to spread the gospel of distributed practice. I hope this assessment will reach more young people (and adults*) and convince them of the wonders of regular learning sessions.
+My aim with the project was to present psychological data with some flair. The Stroop Effect was the first lab experiment I ever did in my undergrad Psych course, and I've been fascinated. Secondly, having worked with students, it has been my mission to spread the gospel of distributed practice. I hope this assessment will reach more young people (and adults*) and convince them of the wonders of regular learning sessions.
 
 *me
 
@@ -22,11 +22,8 @@ The data was sourced from ...
 Try saying the *colour* the words are written in (not the word):
 
 $\color{red}{\text{red}}$  
-
 $\color{blue}{\text{blue}}$  
-
 $\color{green}{\text{green}}$  
-
 $\color{purple}{\text{purple}}$     
 
 
