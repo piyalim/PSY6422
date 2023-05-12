@@ -85,7 +85,7 @@ theme_stroop <- function(){
       size = 8,                      #font size
       hjust = 1),                    #right align
     
-    legend.position = "right"  #positioning legend
+    legend.position = c(.9,.75)  #positioning legend
     )
 }
 
