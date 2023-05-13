@@ -1,6 +1,6 @@
 ---
 title: "Reversing the Stroop Effect"
-author: "Piyali Misquitta"
+author: "220225579"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -74,7 +74,7 @@ library(here)
 library(ggplot2)
 ```
 
-````{r}
+```{r}
 #load the data
 source <- here("data", "cognitive_dynamics_heino.csv")
 stroop <- read.csv(source)
@@ -84,7 +84,7 @@ There are too many variables in the original dataset, so I would like choose the
 
 And also change the names of the columns to make my coding life easier.  
 
-````{r}
+```{r}
 #the column names of the original dataset are too long
 
 #changing them to make them user/coder friendly
@@ -111,7 +111,7 @@ stroop_long <- stroop_clean %>% select(date, congruent, incongruent) %>%
 
 Let's have a look at our final dataset!
 
-````{r}
+```{r}
 head(stroop_long)
 ```
 
@@ -124,12 +124,12 @@ I am hoping to transport you, the reader, to the Stroop experiment with this vis
 ```{r error=FALSE, message=FALSE}
 #defining the theme
 theme_stroop <- function(){
-   theme_minimal() %+replace%         #replacing the elements I want to change
+ 
+  theme_minimal() %+replace%         #replacing the elements I want to change
   
   theme(
     
     #grid elements
-    panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     
     #text elements
@@ -140,7 +140,8 @@ theme_stroop <- function(){
       vjust = 2),                   #raise slightly
 
     plot.subtitle = element_text(   #subtitle
-      size = 10),                   #font size
+      size = 10,                   #font size
+      hjust = 0),                      #left align
     
     axis.title = element_text(      #axis titles
       size = 8),                    #font size
@@ -156,10 +157,10 @@ theme_stroop <- function(){
     )
 }
 
-#building a colour palette 
-#based on the colours used in Stroops original paper
+#building a colour palette based on the original Stroop colours
 
 palette_stroop <- c("#ff0000", "#0085ff", "#3cff00", "#8c00db", "#543324")
+
 ```
 
 
@@ -175,14 +176,14 @@ p1 <- ggplot(data = stroop_long,
 
 plot1 <- p1 + geom_smooth(method = "lm", se = FALSE, na.rm = TRUE)+ 
   geom_point(alpha = 0.5, na.rm = TRUE) +
+  theme_stroop() +
   labs(x = "Year",
        y = "Reaction Time in ms",
        title = "Distributed Practice Improves Performance on Stroop Task",
+       subtitle = "Time across 2.5 years vs time taken for each Stroop trial",
        caption = "Source: 'Cognitive dynamics of a single subject'\n Matti Toivo Juhani Heino")+
-  theme_stroop() +
   scale_colour_manual(values = palette_stroop) +
-  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")+
-  labs(colour = "Condition")
+  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")
 
 plot1
 ```
@@ -201,23 +202,29 @@ y0 <- 140
 y1 <- 180
 
 #coordinates of origin
-x3 <- as.Date("2016-05-01", "%Y-%m-%d")
+x3 <- as.Date("2016-04-01", "%Y-%m-%d")
 x4 <- as.Date("2016-06-30", "%Y-%m-%d")
 y3 <- 90
 y4 <- 100
 
+#coordinates of section to subset
+x01 <- as.Date("2016-04-01", "%Y-%m-%d")
+x02 <- as.Date("2016-06-15", "%Y-%m-%d")
+  
+y01 <- 70
+y02 <- 140
+  
 #the inset done manually
 p2 <- ggplot(data = stroop_long, aes(x = date,
                                      y = time,
                                      colour = condition)) +
   geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +
-  geom_point(alpha = 0.5, na.rm = TRUE)+ 
-  xlim(x3, x4) +
-  ylim(y3, y4)+
+  xlim(x01, x02) +
   theme_stroop()+
   scale_colour_manual(values = palette_stroop)+
-  theme(legend.position = "none")+
-  theme(axis.text.x = element_blank(),
+  theme(legend.position = "none") +
+  theme(#axis.text.x = element_blank(),
+    panel.background = element_rect(fill = "ghostwhite"),
         axis.text.y = element_blank(),
         axis.title = element_blank())
 
@@ -234,7 +241,7 @@ plot1 +
                 ymin = y0,
                 ymax = y1),
               colour = "black",
-                size = 1,
+           linewidth = .6,
                alpha = 0) +
   
   geom_rect(aes(xmin = x3,              #border of section on graph
@@ -242,7 +249,7 @@ plot1 +
                 ymin = y3,
                 ymax = y4),
               colour = "black",
-                size = 1,
+           linewidth = .6,
                 alpha = 0) +
   
      annotate("segment", x = x3, xend = x0,   #connecting graph to inset
