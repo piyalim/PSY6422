@@ -244,7 +244,7 @@ plot1 +
            linewidth = .6,
                alpha = 0) +
   
-  geom_rect(aes(xmin = x3,              #border of section on graph
+  geom_rect(aes(xmin = x3,                    #border of section on graph
                 xmax = x4,
                 ymin = y3,
                 ymax = y4),
@@ -255,12 +255,12 @@ plot1 +
      annotate("segment", x = x3, xend = x0,   #connecting graph to inset
                          y = y4, yend = y0,   
              colour = "black",
-             linewidth = .8,
+             linewidth = .6,
              linetype = 2) +
     annotate("segment", x = x4, xend = x1,    #connecting graph to inset
                         y = y4, yend = y0,
            colour = "black",
-           linewidth = .8,
+           linewidth = .6,
            linetype = 2) 
   
 ```
