@@ -7,13 +7,15 @@ output: html_document
 
 ## Project Motivation  
 
-My aim with the project was to present psychological data with some flair. The Stroop Effect was the first lab experiment I ever did in my undergrad Psych course, and I've been fascinated. Secondly, having worked with students, it has been my mission to spread the gospel of distributed practice. I hope this assessment will reach more young people (and adults*) and convince them of the wonders of regular learning sessions.
+My aim with the project was to attempt communicating psychological theory in an accessible way. The Stroop Effect was the first lab experiment I ever did in my undergrad Psych course, and it blew my mind. Secondly, having worked with students, it has been my mission to spread the gospel of distributed practice. I hope this assessment will reach more young people (and adults*) and convince them of the wonders of regular learning sessions.
 
 *me
 
 ## Data Origins  
 
-The data was sourced from ...
+The data was sourced from *Cognitive Dynamics of a Single Subject: 1428 Stroop Tests and Other Measures in a Mindfulness Meditation Context Over 2.5 Years* by Matti Toivo Juhani Heino (2022), [DOI: 10.5334/jopd.51](https://openpsychologydata.metajnl.com/articles/10.5334/jopd.51).
+
+God bless this person's patience!
 
 ## Psych 101
 
@@ -31,7 +33,7 @@ Try saying the *colour* the words are written in (not the word):
 
 
 
-That was easy, right?  
+That was simple enough.  
 
 
 
@@ -46,7 +48,7 @@ Now try that again: say the font colour, not the word:
 **$\color{blue}{\text{purple}}$**   
 
 
-Was it harder this time? That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
+Did it take longer this time? That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
 
 But what if there was a way to get better at the Stroop Task?
 
@@ -56,7 +58,7 @@ That brings us to...
 
 Distributed practice involves short and frequent study sessions over a longer period of time, and it has been shown to improve recalling information [(Cepeda et al, 2006)](http://www.yorku.ca/ncepeda/publications/CPVWR2006.pdf).  
 
-This is why teachers don't like last-minute cram sessions! It doesn't work!    
+This is why teachers don't like last-minute cram sessions - it doesn't work in the long term!    
 
 ### Research Questions  
 
@@ -66,7 +68,7 @@ Can spaced practice improve performance on the Stroop task?
 
 ```{r error=FALSE, message=FALSE}
 #setting the working directory
-setwd("C:/Users/piyal/OneDrive/Desktop/R/psy6422/datavizproject")
+setwd("C:/Users/piyal/OneDrive/Desktop/R/psy6422/PSY6422")
 
 #load the relevant libraries
 library(tidyverse)
@@ -85,9 +87,7 @@ There are too many variables in the original dataset, so I would like choose the
 And also change the names of the columns to make my coding life easier.  
 
 ```{r}
-#the column names of the original dataset are too long
-
-#changing them to make them user/coder friendly
+#changing column names to make them user/coder friendly
 stroop_clean <- stroop %>%
   select(date, stroop_congruent_pre_meditation, stroop_incongruent_pre_meditation) %>%
    rename(congruent = stroop_congruent_pre_meditation,
@@ -96,7 +96,7 @@ stroop_clean <- stroop %>%
 #date is a character, needs to be made into date format
 stroop_clean <- stroop_clean %>% 
   mutate(date = dmy(date)) %>%                 #changing string to date
-  filter(date > "2014-07-01", na.rm = TRUE)    #deleting outliers
+  filter(date > "2014-07-01", na.rm = TRUE)    #deleting dates that are outliers
 
 
 #changing centiseconds to milliseconds
@@ -119,7 +119,7 @@ That looks neat and concise and ready for the next step!
 
 ### Visualising the data
 
-I am hoping to transport you, the reader, to the Stroop experiment with this visualisation. To do this, I have chosen the colours used by Stroop in his original experiment. 
+I wanted to make a neater visualisation by making some adjustments to the basic ggplot theme. 
 
 ```{r error=FALSE, message=FALSE}
 #defining the theme
@@ -140,8 +140,8 @@ theme_stroop <- function(){
       vjust = 2),                   #raise slightly
 
     plot.subtitle = element_text(   #subtitle
-      size = 10,                   #font size
-      hjust = 0),                      #left align
+      size = 10,                    #font size
+      hjust = 0),                   #left align
     
     axis.title = element_text(      #axis titles
       size = 8),                    #font size
@@ -149,11 +149,13 @@ theme_stroop <- function(){
     axis.text = element_text(       #axis text
       size = 8),                    #font size
     
-    plot.caption = element_text(     #caption
-      size = 8,                      #font size
-      hjust = 1),                    #right align
+    plot.caption = element_text(    #caption
+      size = 8,                     #font size
+      hjust = 1),                   #right align
     
-    legend.position = c(.9,.8)  #positioning legend
+    legend.position = c(.9,.8),  #positioning legend
+    
+    plot.background = element_rect(fill = "white", color = NA)
     )
 }
 
@@ -174,23 +176,26 @@ p1 <- ggplot(data = stroop_long,
                            y = time,
                            colour = condition))
 
-plot1 <- p1 + geom_smooth(method = "lm", se = FALSE, na.rm = TRUE)+ 
-  geom_point(alpha = 0.5, na.rm = TRUE) +
-  theme_stroop() +
-  labs(x = "Year",
+plot1 <- p1 + 
+  geom_smooth(method = "lm", se = FALSE, na.rm = TRUE)+                # linear regression lines
+  geom_point(alpha = 0.5, na.rm = TRUE) +                              #scatter plot
+  theme_stroop() +                                                     #the theme defined previously
+  labs(x = "Year",                                                     #labelling the graph
        y = "Reaction Time in ms",
        title = "Distributed Practice Improves Performance on Stroop Task",
        subtitle = "Time across 2.5 years vs time taken for each Stroop trial",
        caption = "Source: 'Cognitive dynamics of a single subject'\n Matti Toivo Juhani Heino")+
-  scale_colour_manual(values = palette_stroop) +
-  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")
+  scale_colour_manual(values = palette_stroop) +                       #using the colours defined previously
+  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")        #defining the intervals on the x-axis
 
-plot1
+plot1                                                                  #let's take a look at our plot
 ```
 
-Wait, what?! Does deliberate practice actually **reverse the Stroop effect?!**  
+it looks like practice does make you faster at both tasks - reading the congruent and incongruent words!  
 
-Let's take a closer look.
+Wait, there's more! Does deliberate practice actually **reverse the Stroop Effect?!**  
+
+Let's take a closer look.  
 
 ```{r error=FALSE, message=FALSE, out.width="100%"}
 #creating a magnified inset showing crossover
@@ -215,23 +220,23 @@ y01 <- 70
 y02 <- 140
   
 #the inset done manually
-p2 <- ggplot(data = stroop_long, aes(x = date,
+p2 <- ggplot(data = stroop_long, aes(x = date,                    #basic plot
                                      y = time,
                                      colour = condition)) +
-  geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +
-  xlim(x01, x02) +
-  theme_stroop()+
-  scale_colour_manual(values = palette_stroop)+
-  theme(legend.position = "none") +
-  theme(#axis.text.x = element_blank(),
-    panel.background = element_rect(fill = "ghostwhite"),
-        axis.text.y = element_blank(),
-        axis.title = element_blank())
+  geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +          #regression line
+  xlim(x01, x02) +                                                #subsetting the part that crosses over
+  theme_stroop()+                                                 #use our theme from before
+  scale_colour_manual(values = palette_stroop)+                   #using the colours from before
+  theme(legend.position = "none") +                               #removing the legend in the inset
+  theme(panel.background = element_rect(fill = "ghostwhite"),     #giving it a background to highlight it
+        axis.text.y = element_blank(),                            #removing the y-axis text
+        axis.title = element_blank())                             #removing the titles from the axes
 
-  
-plot1 + 
-  annotation_custom(ggplotGrob(p2), 
-                    xmin = x0,
+
+#adding the inset to the original plot  
+plot2 <- plot1 + 
+  annotation_custom(ggplotGrob(p2),    #adding the inset
+                    xmin = x0,         #defining the coordinates for the inset
                     xmax = x1,
                     ymin = y0,
                     ymax = y1) +
@@ -244,7 +249,7 @@ plot1 +
            linewidth = .6,
                alpha = 0) +
   
-  geom_rect(aes(xmin = x3,                    #border of section on graph
+  geom_rect(aes(xmin = x3,              #border highlighting the section on graph
                 xmax = x4,
                 ymin = y3,
                 ymax = y4),
@@ -262,14 +267,38 @@ plot1 +
            colour = "black",
            linewidth = .6,
            linetype = 2) 
+
+plot2
   
+```
+
+```{r}
+#saving our plot
+ggsave(here("figs", "stroop_practice_inset.png"), 
+       plot = plot2, width = 25, height = 15, units = "cm")
 ```
 
 This graph shows the effect of daily practice on the Stroop Effect.   
 
 With enough practice you could end up reading this:
 
-faster than you read this:  
+**$\color{green}{\text{red}}$**   
+
+**$\color{red}{\text{blue}}$**    
+
+**$\color{purple}{\text{green}}$**    
+
+**$\color{blue}{\text{purple}}$**  
+
+...faster than you read this:  
+
+**$\color{red}{\text{red}}$**  
+
+**$\color{blue}{\text{blue}}$**  
+
+**$\color{green}{\text{green}}$**  
+
+**$\color{purple}{\text{purple}}$**    
 
 Imagine what else you could become proficient in with distributed practice!
 
