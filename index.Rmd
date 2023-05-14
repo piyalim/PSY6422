@@ -15,8 +15,6 @@ My aim with the project was to attempt communicating psychological theory in an 
 
 The data was sourced from *Cognitive Dynamics of a Single Subject: 1428 Stroop Tests and Other Measures in a Mindfulness Meditation Context Over 2.5 Years* by Matti Toivo Juhani Heino (2022), [DOI: 10.5334/jopd.51](https://openpsychologydata.metajnl.com/articles/10.5334/jopd.51).
 
-God bless this person's patience!
-
 ## Psych 101
 
 ### What is the Stroop Effect?  
@@ -48,6 +46,7 @@ Now try that again: say the font colour, not the word:
 **$\color{blue}{\text{purple}}$**   
 
 
+
 Did it take longer this time? That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
 
 But what if there was a way to get better at the Stroop Task?
@@ -60,11 +59,11 @@ Distributed practice involves short and frequent study sessions over a longer pe
 
 This is why teachers don't like last-minute cram sessions - it doesn't work in the long term!    
 
-### Research Questions  
+## Research Question  
 
-Can spaced practice improve performance on the Stroop task?
+What is the effect of distributed practice is on a cognitively difficult undertaking like the Stroop Task?
 
-### Preparing the data
+## Preparing the data
 
 ```{r error=FALSE, message=FALSE}
 #setting the working directory
@@ -88,6 +87,7 @@ And also change the names of the columns to make my coding life easier.
 
 ```{r}
 #changing column names to make them user/coder friendly
+#changing them to make them user/coder friendly
 stroop_clean <- stroop %>%
   select(date, stroop_congruent_pre_meditation, stroop_incongruent_pre_meditation) %>%
    rename(congruent = stroop_congruent_pre_meditation,
@@ -95,7 +95,8 @@ stroop_clean <- stroop %>%
 
 #date is a character, needs to be made into date format
 stroop_clean <- stroop_clean %>% 
-  filter(date > "2014-07-01", na.rm = TRUE)    #deleting dates that are outliers
+  mutate(date = dmy(date)) %>%                 #changing string to date
+  filter(date > "2014-07-01", na.rm = TRUE)    #deleting outliers
 
 
 #changing centiseconds to milliseconds
@@ -104,10 +105,8 @@ stroop_clean <- stroop_clean %>%
          incongruent = incongruent * 10)
 
 #reshaping dataframe to long
-stroop_long <- stroop_clean %>% 
-  select(date, congruent, incongruent) %>% 
-   gather(condition, time, congruent, incongruent) %>% 
-      
+stroop_long <- stroop_clean %>% select(date, congruent, incongruent) %>% 
+  gather(condition, time, congruent, incongruent)
 ```
 
 Let's have a look at our final dataset!
@@ -118,7 +117,7 @@ head(stroop_long)
 
 That looks neat and concise and ready for the next step!
 
-### Visualising the data
+## Visualising the data
 
 I wanted to make a neater visualisation by making some adjustments to the basic ggplot theme. 
 
@@ -166,33 +165,38 @@ palette_stroop <- c("#ff0000", "#0085ff", "#3cff00", "#8c00db", "#543324")
 
 ```
 
+A scatter plot with trend lines would give us an idea of the time taken for the each Stroop Task over the years of practice.  
 
-And now, the moment we have been waiting for!
-
+Let's take the first look at our data!  
 
 ```{r eval=TRUE, error=FALSE, message=FALSE, out.width="100%"}
+
 #plotting reaction time for congruent and incongruent trials
+
+#creating the basic plot of time of trials across the years
 p1 <- ggplot(data = stroop_long,
              mapping = aes(x = date,
                            y = time,
                            colour = condition))
-
+  
 plot1 <- p1 + 
-  geom_smooth(method = "lm", se = FALSE, na.rm = TRUE)+                # linear regression lines
-  geom_point(alpha = 0.5, na.rm = TRUE) +                              #scatter plot
-  theme_stroop() +                                                     #the theme defined previously
-  labs(x = "Year",                                                     #labelling the graph
-       y = "Reaction Time in ms",
+  geom_smooth(method = "lm", se= FALSE)+                                  #drawing the scatter plot
+  geom_point(alpha = 0.5) +
+  labs(x = "Year",                                                        #labelling the graph
+       y = "Time of trials in ms",
        title = "Distributed Practice Improves Performance on Stroop Task",
-       subtitle = "Time across 2.5 years vs time taken for each Stroop trial",
+       subtitle = "Time taken for each Stroop trial over 2.5 years",
        caption = "Source: 'Cognitive dynamics of a single subject'\n Matti Toivo Juhani Heino")+
-  scale_colour_manual(values = palette_stroop) +                       #using the colours defined previously
-  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")        #defining the intervals on the x-axis
-
-plot1                                                                  #let's take a look at our plot
+  theme_stroop() +                                                        #using the theme defined earlier
+  scale_colour_manual(values = palette_stroop) +                          #using the colours defined earlier
+  scale_x_date(date_breaks = "4 months", date_labels = "%b %Y")+          #defining the breaks on the x-axis
+  labs(colour = "Condition")
+  
+plot1
 ```
 
-it looks like practice does make you faster at both tasks - reading the congruent and incongruent words!  
+
+It looks like practice does make you faster at both tasks - reading the congruent (**$\color{red}{\text{red}}$**) and incongruent (**$\color{blue}{\text{red}}$**) words!  
 
 Wait, there's more! Does deliberate practice actually **reverse the Stroop Effect?!**  
 
@@ -219,12 +223,13 @@ x02 <- as.Date("2016-06-15", "%Y-%m-%d")
   
 y01 <- 70
 y02 <- 140
-  
+
+
 #the inset done manually
 p2 <- ggplot(data = stroop_long, aes(x = date,                    #basic plot
                                      y = time,
                                      colour = condition)) +
-  geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +          #regression line
+    geom_smooth(method = "lm", se = FALSE, na.rm = TRUE) +        #regression line
   xlim(x01, x02) +                                                #subsetting the part that crosses over
   theme_stroop()+                                                 #use our theme from before
   scale_colour_manual(values = palette_stroop)+                   #using the colours from before
@@ -279,9 +284,8 @@ ggsave(here("figs", "stroop_practice_inset.png"),
        plot = plot2, width = 25, height = 15, units = "cm")
 ```
 
-This graph shows the effect of daily practice on the Stroop Effect.   
-
-With enough practice you could end up reading this:
+## Summary
+This graph shows the effect of daily practice on the Stroop Effect. With enough practice you could end up reading this:
 
 **$\color{green}{\text{red}}$**   
 
@@ -301,8 +305,7 @@ With enough practice you could end up reading this:
 
 **$\color{purple}{\text{purple}}$**    
 
-Imagine what else you could become proficient in with distributed practice!
 
-### Further explorations
+## Further explorations
 
-The original dataset also has data on meditation, the time of day when the Stroop task was done. It would be interesting to see how those factors play a role in learning.
+The original dataset also has data on other factors like meditation, the time of day when the Stroop task was done. It would be interesting to see how those additional factors play a role in learning.
