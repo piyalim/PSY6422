@@ -95,7 +95,6 @@ stroop_clean <- stroop %>%
 
 #date is a character, needs to be made into date format
 stroop_clean <- stroop_clean %>% 
-  mutate(date = dmy(date)) %>%                 #changing string to date
   filter(date > "2014-07-01", na.rm = TRUE)    #deleting dates that are outliers
 
 
@@ -105,8 +104,10 @@ stroop_clean <- stroop_clean %>%
          incongruent = incongruent * 10)
 
 #reshaping dataframe to long
-stroop_long <- stroop_clean %>% select(date, congruent, incongruent) %>% 
-  gather(condition, time, congruent, incongruent)
+stroop_long <- stroop_clean %>% 
+  select(date, congruent, incongruent) %>% 
+   gather(condition, time, congruent, incongruent) %>% 
+      
 ```
 
 Let's have a look at our final dataset!

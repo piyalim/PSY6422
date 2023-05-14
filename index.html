@@ -429,6 +429,7 @@ choose the ones relevant for the visualisation.</p>
 <p>And also change the names of the columns to make my coding life
 easier.</p>
 <pre class="r"><code>#changing column names to make them user/coder friendly
+#changing them to make them user/coder friendly
 stroop_clean &lt;- stroop %&gt;%
   select(date, stroop_congruent_pre_meditation, stroop_incongruent_pre_meditation) %&gt;%
    rename(congruent = stroop_congruent_pre_meditation,
@@ -437,7 +438,7 @@ stroop_clean &lt;- stroop %&gt;%
 #date is a character, needs to be made into date format
 stroop_clean &lt;- stroop_clean %&gt;% 
   mutate(date = dmy(date)) %&gt;%                 #changing string to date
-  filter(date &gt; &quot;2014-07-01&quot;, na.rm = TRUE)    #deleting dates that are outliers
+  filter(date &gt; &quot;2014-07-01&quot;, na.rm = TRUE)    #deleting outliers
 
 
 #changing centiseconds to milliseconds
