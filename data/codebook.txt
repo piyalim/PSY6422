@@ -1,3 +1,10 @@
+This is the original codebook by the creator of the dataset. It describes all the data in the .csv file. I will be using the following variables:
+- date (#2)
+- stroop_congruent_pre_meditation (#17)
+- stroop_incongruent_pre_meditation (#18)
+
+The rest of the text is by the author.
+
 General note: The session (i.e. logging data, doing the Stroop tasks, meditating etc.) proceeded in approximately the variable order. As an exception, variable 34 (possibly compromised data quality) was logged directly after the post-meditation Stroop task.
 
 1. rowNumber
