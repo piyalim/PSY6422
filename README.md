@@ -10,3 +10,7 @@ README.md - project description (This file)
 /figs - folder with graph output
 /script - folder with R script
 
+The project was made in R v4.3.0 with 
+-tidyverse package (v2.0.0) 
+-here package (v1.0.1)
+-ggplot2 package(v3.4.2)
