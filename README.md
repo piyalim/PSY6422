@@ -9,6 +9,9 @@ README.md - project description (This file)
 /data - folder with data and codebook  
 /figs - folder with graph output  
 /script - folder with R script  
+PSY6422.Rproj - the Rproject file  
+index.Rmd - the markdown file of the project
+index.html - the html file of the project
 
 The project was made in R v4.3.0 with 
 -tidyverse package (v2.0.0)  
