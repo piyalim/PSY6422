@@ -31,7 +31,7 @@ Try saying the *colour* the words are written in (not the word):
 
 
 
-That was simple enough.  
+That was the **congruent** condition, which is usually simple enough.
 
 
 
@@ -47,11 +47,13 @@ Now try that again: say the font colour, not the word:
 
 
 
-Did it take longer this time? That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
+This condition is called the **incongruent condition** because the colour and word don't match. Did it take longer this time?  
+
+That's because of the *Stroop Effect*. It's named after the John Stroop, who realised that it's faster to say the colour names when the text matches the colour [(Stroop, 1935)](https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf).  
 
 But what if there was a way to get better at the Stroop Task?
 
-That brings us to...   
+That brings us to... 
 
 ### What is distributed practice?  
 
@@ -285,7 +287,7 @@ ggsave(here("figs", "stroop_practice_inset.png"),
 ```
 
 ## Summary
-This graph shows the effect of daily practice on the Stroop Effect. With enough practice you could end up reading this:
+This graph shows the effect of daily practice on the Stroop Effect. With enough practice you could end up reading this incongruent version...
 
 **$\color{green}{\text{red}}$**   
 
@@ -295,7 +297,7 @@ This graph shows the effect of daily practice on the Stroop Effect. With enough 
 
 **$\color{blue}{\text{purple}}$**  
 
-...faster than you read this:  
+...faster than you read this congruent version:  
 
 **$\color{red}{\text{red}}$**  
 
@@ -308,4 +310,5 @@ This graph shows the effect of daily practice on the Stroop Effect. With enough 
 
 ## Further explorations
 
-The original dataset also has data on other factors like meditation, the time of day when the Stroop task was done. It would be interesting to see how those additional factors play a role in learning.
+* The original dataset also has data on other factors like meditation, the time of day when the Stroop task was done. It would be interesting to see how those additional factors play a role in learning.  
+* It would also be interesting to see how the Stroop effect changes immediately after a meditation practice. I decided to test the pre-meditation one alone to only see practice effects, and not the effect of meditation.

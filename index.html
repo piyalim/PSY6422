@@ -11,7 +11,7 @@
 
 <meta name="author" content="220225579" />
 
-<meta name="date" content="2023-05-14" />
+<meta name="date" content="2023-05-16" />
 
 <title>Reversing the Stroop Effect</title>
 
@@ -352,7 +352,7 @@ display: none;
 
 <h1 class="title toc-ignore">Reversing the Stroop Effect</h1>
 <h4 class="author">220225579</h4>
-<h4 class="date">2023-05-14</h4>
+<h4 class="date">2023-05-16</h4>
 
 </div>
 
@@ -385,15 +385,19 @@ word):</p>
 <p><strong><span class="math inline">\(\color{blue}{\text{blue}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{green}{\text{green}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{purple}{\text{purple}}\)</span></strong></p>
-<p>That was simple enough.</p>
+<p>That was the <strong>congruent</strong> condition, which is usually
+simple enough.</p>
 <p>Now try that again: say the font colour, not the word:</p>
 <p><strong><span class="math inline">\(\color{green}{\text{red}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{red}{\text{blue}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{purple}{\text{green}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{blue}{\text{purple}}\)</span></strong></p>
-<p>Did it take longer this time? That’s because of the <em>Stroop
-Effect</em>. It’s named after the John Stroop, who realised that it’s
-faster to say the colour names when the text matches the colour <a href="https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf">(Stroop,
+<p>This condition is called the <strong>incongruent condition</strong>
+because the colour and word don’t match. Did it take longer this
+time?</p>
+<p>That’s because of the <em>Stroop Effect</em>. It’s named after the
+John Stroop, who realised that it’s faster to say the colour names when
+the text matches the colour <a href="https://psych.hanover.edu/classes/Cognition/papers/stroop%201933.pdf">(Stroop,
 1935)</a>.</p>
 <p>But what if there was a way to get better at the Stroop Task?</p>
 <p>That brings us to…</p>
@@ -625,12 +629,13 @@ ggsave(here(&quot;figs&quot;, &quot;stroop_practice_inset.png&quot;),
 <div id="summary" class="section level2">
 <h2>Summary</h2>
 <p>This graph shows the effect of daily practice on the Stroop Effect.
-With enough practice you could end up reading this:</p>
+With enough practice you could end up reading this incongruent
+version…</p>
 <p><strong><span class="math inline">\(\color{green}{\text{red}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{red}{\text{blue}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{purple}{\text{green}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{blue}{\text{purple}}\)</span></strong></p>
-<p>…faster than you read this:</p>
+<p>…faster than you read this congruent version:</p>
 <p><strong><span class="math inline">\(\color{red}{\text{red}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{blue}{\text{blue}}\)</span></strong></p>
 <p><strong><span class="math inline">\(\color{green}{\text{green}}\)</span></strong></p>
@@ -638,9 +643,16 @@ With enough practice you could end up reading this:</p>
 </div>
 <div id="further-explorations" class="section level2">
 <h2>Further explorations</h2>
-<p>The original dataset also has data on other factors like meditation,
+<ul>
+<li>The original dataset also has data on other factors like meditation,
 the time of day when the Stroop task was done. It would be interesting
-to see how those additional factors play a role in learning.</p>
+to see how those additional factors play a role in learning.<br />
+</li>
+<li>It would also be interesting to see how the Stroop effect changes
+immediately after a meditation practice. I decided to test the
+pre-meditation one alone to only see practice effects, and not the
+effect of meditation.</li>
+</ul>
 </div>
 
 
